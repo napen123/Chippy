@@ -23,22 +23,22 @@ typedef double f64;
 
 static u8 builtinFont[80] =
 {
-	0xF0, 0x90, 0x90, 0x90, 0xF0,
-	0x20, 0x60, 0x20, 0x20, 0x70,
-	0xF0, 0x10, 0xF0, 0x80, 0xF0,
-	0xF0, 0x10, 0xF0, 0x10, 0xF0,
-	0x90, 0x90, 0xF0, 0x10, 0x10,
-	0xF0, 0x80, 0xF0, 0x10, 0xF0,
-	0xF0, 0x80, 0xF0, 0x90, 0xF0,
-	0xF0, 0x10, 0x20, 0x40, 0x40,
-	0xF0, 0x90, 0xF0, 0x90, 0xF0,
-	0xF0, 0x90, 0xF0, 0x10, 0xF0,
-	0xF0, 0x90, 0xF0, 0x90, 0x90,
-	0xE0, 0x90, 0xE0, 0x90, 0xE0,
-	0xF0, 0x80, 0x80, 0x80, 0xF0,
-	0xE0, 0x90, 0x90, 0x90, 0xE0,
-	0xF0, 0x80, 0xF0, 0x80, 0xF0,
-	0xF0, 0x80, 0xF0, 0x80, 0x80
+    0xF0, 0x90, 0x90, 0x90, 0xF0,
+    0x20, 0x60, 0x20, 0x20, 0x70,
+    0xF0, 0x10, 0xF0, 0x80, 0xF0,
+    0xF0, 0x10, 0xF0, 0x10, 0xF0,
+    0x90, 0x90, 0xF0, 0x10, 0x10,
+    0xF0, 0x80, 0xF0, 0x10, 0xF0,
+    0xF0, 0x80, 0xF0, 0x90, 0xF0,
+    0xF0, 0x10, 0x20, 0x40, 0x40,
+    0xF0, 0x90, 0xF0, 0x90, 0xF0,
+    0xF0, 0x90, 0xF0, 0x10, 0xF0,
+    0xF0, 0x90, 0xF0, 0x90, 0x90,
+    0xE0, 0x90, 0xE0, 0x90, 0xE0,
+    0xF0, 0x80, 0x80, 0x80, 0xF0,
+    0xE0, 0x90, 0x90, 0x90, 0xE0,
+    0xF0, 0x80, 0xF0, 0x80, 0xF0,
+    0xF0, 0x80, 0xF0, 0x80, 0x80
 };
 
 union
@@ -47,77 +47,77 @@ union
 
     struct
     {
-    	u16 i;
-		u16 pc;
+        u16 i;
+        u16 pc;
 
-		u8 sp;
-		u8 waitingKey;
-		u8 delayTimer;
-		u8 soundTimer;
+        u8 sp;
+        u8 waitingKey;
+        u8 delayTimer;
+        u8 soundTimer;
 
-		u8 reg[16];
-		u8 keys[16];
-		u16 stack[12];
-		u8 font[80];
-		u8 display[DISPLAY_WIDTH * DISPLAY_HEIGHT / 8];
+        u8 reg[16];
+        u8 keys[16];
+        u16 stack[12];
+        u8 font[80];
+        u8 display[DISPLAY_WIDTH * DISPLAY_HEIGHT / 8];
     };
 } chippy;
 
 static u8 calculate_draw(int index, u8 value)
 {
-	return ((chippy.display[index] ^= value) ^ value) & value;
+    return ((chippy.display[index] ^= value) ^ value) & value;
 }
 
 static int get_random()
 {
-	int ret = 0;
+    int ret = 0;
 
-	do
-	{
-		ret = rand();
-	} while(ret >= 256 * (int) ((RAND_MAX + 1) / 256));
+    do
+    {
+        ret = rand();
+    } while(ret >= 256 * (int) ((RAND_MAX + 1) / 256));
 
-	ret /= (int) ((RAND_MAX + 1) / 256);
+    ret /= (int) ((RAND_MAX + 1) / 256);
 
-	return ret;
+    return ret;
 }
 
 static int get_key(int scancode)
 {
-	switch(scancode)
-	{
-		case SDL_SCANCODE_1: return 0x1;
-		case SDL_SCANCODE_2: return 0x2;
-		case SDL_SCANCODE_3: return 0x3;
-		case SDL_SCANCODE_4: return 0xC;
-		case SDL_SCANCODE_Q: return 0x4;
-		case SDL_SCANCODE_W: return 0x5;
-		case SDL_SCANCODE_E: return 0x6;
-		case SDL_SCANCODE_R: return 0xD;
-		case SDL_SCANCODE_A: return 0x7;
-		case SDL_SCANCODE_S: return 0x8;
-		case SDL_SCANCODE_D: return 0x9;
-		case SDL_SCANCODE_F: return 0xE;
-		case SDL_SCANCODE_Z: return 0xA;
-		case SDL_SCANCODE_X: return 0x0;
-		case SDL_SCANCODE_C: return 0xB;
-		case SDL_SCANCODE_V: return 0xF;
-		default: return -1;
-	}
+    switch(scancode)
+    {
+        case SDL_SCANCODE_1: return 0x1;
+        case SDL_SCANCODE_2: return 0x2;
+        case SDL_SCANCODE_3: return 0x3;
+        case SDL_SCANCODE_4: return 0xC;
+        case SDL_SCANCODE_Q: return 0x4;
+        case SDL_SCANCODE_W: return 0x5;
+        case SDL_SCANCODE_E: return 0x6;
+        case SDL_SCANCODE_R: return 0xD;
+        case SDL_SCANCODE_A: return 0x7;
+        case SDL_SCANCODE_S: return 0x8;
+        case SDL_SCANCODE_D: return 0x9;
+        case SDL_SCANCODE_F: return 0xE;
+        case SDL_SCANCODE_Z: return 0xA;
+        case SDL_SCANCODE_X: return 0x0;
+        case SDL_SCANCODE_C: return 0xB;
+        case SDL_SCANCODE_V: return 0xF;
+        default: return -1;
+    }
 }
 
 static void load(const char* filename)
 {
-	FILE* file = fopen(filename, "rb");
+    FILE* file = fopen(filename, "rb");
 
-	fseek(file, 0, SEEK_END);
-	int length = ftell(file);
-	rewind(file);
-	fread(&chippy.memory[0x200], sizeof(u8), length, file);
-	fclose(file);
+    fseek(file, 0, SEEK_END);
+    int length = ftell(file);
+    rewind(file);
+    fread(&chippy.memory[0x200], sizeof(u8), length, file);
+    fclose(file);
 
     for(int i = 0; i < 80; i++)
-    	chippy.font[i] = builtinFont[i];
+        chippy.font[i] = builtinFont[i];
 
     chippy.pc = 0x200;
 
@@ -303,7 +303,7 @@ static void step()
 
 int main(int argc, char** argv)
 {
-	load(argv[1]);
+    load(argv[1]);
 
     SDL_Init(SDL_INIT_VIDEO);
 
@@ -328,15 +328,15 @@ int main(int argc, char** argv)
             switch(e.type)
             {
                 case SDL_QUIT:
-                	running = 0;
-                	break;
+                    running = 0;
+                    break;
                 case SDL_KEYDOWN:
                 case SDL_KEYUP:
                 {
                     int key = get_key(e.key.keysym.scancode);
 
                     if(key == -1)
-                    	break;
+                        break;
 
                     int state = e.key.state;
                     chippy.keys[key] = state;
@@ -363,16 +363,16 @@ int main(int argc, char** argv)
 
             if(chippy.soundTimer > 0)
             {
-            	chippy.soundTimer -= MIN(frames, chippy.soundTimer);
-        	
-            	if(chippy.soundTimer == 0)
-            		puts("BEEP!");
-        	}
+                chippy.soundTimer -= MIN(frames, chippy.soundTimer);
+            
+                if(chippy.soundTimer == 0)
+                    puts("BEEP!");
+            }
 
             Uint32 pixels[DISPLAY_WIDTH * DISPLAY_HEIGHT];
 
             for(int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++)
-            	pixels[i] = 0xFFFFFF * ((chippy.display[i / 8] >> (7 - i % 8)) & 1);
+                pixels[i] = 0xFFFFFF * ((chippy.display[i / 8] >> (7 - i % 8)) & 1);
 
             SDL_UpdateTexture(screen, NULL, pixels, 4 * DISPLAY_WIDTH);
             SDL_RenderCopy(renderer, screen, NULL, NULL);
@@ -382,7 +382,7 @@ int main(int argc, char** argv)
         instToDo = MAX(frames, 1) * INSTRUCTIONS_PER_FRAME;
 
         if((chippy.waitingKey & 0x80) || !frames)
-        	SDL_Delay(1000 / 60);
+            SDL_Delay(1000 / 60);
     }
 
     SDL_DestroyTexture(screen);
