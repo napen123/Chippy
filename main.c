@@ -9,7 +9,7 @@
 #define DISPLAY_WIDTH 64
 #define DISPLAY_HEIGHT 32
 
-#define INSTRUCTIONS_PER_FRAME 1000
+#define INSTRUCTIONS_PER_FRAME 10
 
 #define MIN(a, b) (a < b ? a : b)
 #define MAX(a, b) (a > b ? a : b)
@@ -241,7 +241,7 @@ static void step()
             for(unsigned xx = chippy.reg[x], yy = chippy.reg[y]; nibble--; )
                 changed |= calculate_draw((xx % DISPLAY_WIDTH + (yy + nibble) % DISPLAY_HEIGHT * DISPLAY_WIDTH) / 8, chippy.memory[(chippy.i + nibble) & 0xFFFF] >> (xx % 8))
                         |  calculate_draw(((xx + 7) % DISPLAY_WIDTH + (yy + nibble) % DISPLAY_HEIGHT * DISPLAY_WIDTH) / 8, chippy.memory[(chippy.i + nibble) & 0xFFFF] << (8 - xx % 8));
-            
+
             chippy.reg[0xF] = (changed != 0);
         }
             break;
@@ -340,7 +340,7 @@ int main(int argc, char** argv)
 
                     int state = e.key.state;
                     chippy.keys[key] = state;
-                    
+
                     if(state == SDL_KEYDOWN && (chippy.waitingKey & 0x80))
                     {
                         chippy.waitingKey             &= 0x7F;
@@ -364,12 +364,12 @@ int main(int argc, char** argv)
             if(chippy.soundTimer > 0)
             {
                 chippy.soundTimer -= MIN(frames, chippy.soundTimer);
-            
+
                 if(chippy.soundTimer == 0)
                     puts("BEEP!");
             }
 
-            Uint32 pixels[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+            u32 pixels[DISPLAY_WIDTH * DISPLAY_HEIGHT];
 
             for(int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++)
                 pixels[i] = 0xFFFFFF * ((chippy.display[i / 8] >> (7 - i % 8)) & 1);
