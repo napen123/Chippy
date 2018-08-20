@@ -122,7 +122,7 @@ static void init(const char* filename)
 static void step()
 {
     u16 opcode = chippy.memory[chippy.pc] << 8 | chippy.memory[chippy.pc + 1];
-    chippy.pc += 2;
+    chippy.pc = (chippy.pc + 2) & 0xFFF;
 
     u16 nnn   = opcode & 0xFFF;
     u8 nibble = opcode & 0xF;
@@ -304,7 +304,7 @@ int main(int argc, char** argv)
 
     SDL_Window* window = SDL_CreateWindow(argv[1], SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, DISPLAY_WIDTH * 8, DISPLAY_HEIGHT * 8, SDL_WINDOW_SHOWN);
     SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    SDL_Texture* screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, DISPLAY_WIDTH,DISPLAY_HEIGHT);
+    SDL_Texture* screen = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_RGB888, SDL_TEXTUREACCESS_STREAMING, DISPLAY_WIDTH, DISPLAY_HEIGHT);
 
     int done = 0;
     int running = 1;
