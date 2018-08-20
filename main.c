@@ -9,6 +9,7 @@
 #define DISPLAY_WIDTH 64
 #define DISPLAY_HEIGHT 32
 
+#define MEMORY_SIZE 4096
 #define INSTRUCTIONS_PER_FRAME 10
 
 #define MIN(a, b) (a < b ? a : b)
@@ -41,26 +42,22 @@ static u8 builtinFont[80] =
     0xF0, 0x80, 0xF0, 0x80, 0x80
 };
 
-union
+struct
 {
-    u8 memory[0x1000];
+	u16 i;
+    u16 pc;
+    u8 sp;
 
-    struct
-    {
-        u16 i;
-        u16 pc;
+    u8 waitingKey;
 
-        u8 sp;
-        u8 waitingKey;
-        u8 delayTimer;
-        u8 soundTimer;
+    u8 delayTimer;
+    u8 soundTimer;
 
-        u8 reg[16];
-        u8 keys[16];
-        u16 stack[12];
-        u8 font[80];
-        u8 display[DISPLAY_WIDTH * DISPLAY_HEIGHT / 8];
-    };
+    u8 reg[16];
+    u8 keys[16];
+    u16 stack[12];
+    u8 display[DISPLAY_WIDTH * DISPLAY_HEIGHT / 8];
+    u8 memory[MEMORY_SIZE];
 } chippy;
 
 static u8 calculate_draw(int index, u8 value)
@@ -106,20 +103,18 @@ static int get_key(const int scancode)
     }
 }
 
-static void load(const char* filename)
+static void init(const char* filename)
 {
     FILE* file = fopen(filename, "rb");
+
+    chippy.pc = 0x200;
+    memcpy(chippy.memory + 0x50, builtinFont, 80);
 
     fseek(file, 0, SEEK_END);
     int length = ftell(file);
     rewind(file);
     fread(&chippy.memory[0x200], sizeof(u8), length, file);
     fclose(file);
-
-    for(int i = 0; i < 80; i++)
-        chippy.font[i] = builtinFont[i];
-
-    chippy.pc = 0x200;
 
     srand(time(NULL));
 }
@@ -281,7 +276,7 @@ static void step()
                 }
                     break;
                 case 0x29:
-                    chippy.i = &chippy.font[(chippy.reg[x] & 15) * 5] - chippy.memory;
+                    chippy.i = 0x50 + (chippy.reg[x] & 0xF) * 5;
                     break;
                 case 0x33:
                     chippy.memory[chippy.i & 0xFFFF] = (chippy.reg[x] / 100) % 10;
@@ -303,7 +298,7 @@ static void step()
 
 int main(int argc, char** argv)
 {
-    load(argv[1]);
+    init(argv[1]);
 
     SDL_Init(SDL_INIT_VIDEO);
 
