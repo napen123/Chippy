@@ -82,7 +82,7 @@ static int get_random()
     return ret;
 }
 
-static int get_key(int scancode)
+static int get_key(const int scancode)
 {
     switch(scancode)
     {
