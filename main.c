@@ -44,7 +44,7 @@ static u8 builtinFont[80] =
 
 struct
 {
-	u16 i;
+    u16 i;
     u16 pc;
     u8 sp;
 
